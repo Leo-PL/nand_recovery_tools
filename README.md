@@ -13,6 +13,9 @@ storage device.
 dumps containing bitflips, by means of
 [majority-vote error correction](https://en.wikipedia.org/wiki/Majority_logic_decoding)
 
+* invert: program to invert the image bitwise, replacing ones with zeros
+and vice versa. Useful to undo inversion performed by certain Flash controllers.
+
 ## License
 
 Code is licensed under GNU General Public License 2.0
