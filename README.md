@@ -27,6 +27,11 @@ mapping of a controller, for example to group paired pages of MLC flash together
 perform block rotation by splitting and rejoining in different order, or joining images
 from multiple Flash chips.
 
+* filter\_blocks: As the name implies, this program filters input blocks based on
+conditions specified on command line. This is used to selectively output only those blocks,
+which were mapped to a filesystem and actually containing user data, or to remove known
+bad blocks from the image.
+
 ## License
 
 Code is licensed under GNU General Public License 2.0
