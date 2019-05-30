@@ -32,6 +32,12 @@ conditions specified on command line. This is used to selectively output only th
 which were mapped to a filesystem and actually containing user data, or to remove known
 bad blocks from the image.
 
+* rotate\_blocks: Some Flash controllers do not start filling an eraseblock on logical boundary,
+but start with an offset, starting writing with logical page number other than zero.
+Rotation operation restores logical ordering in erase block by moving pages with logical page number 0
+to the beginning of the block, by the amount of pages in Logical Page Number, modulo page count per
+erase block. Afterwards pages are arranged with Logical Page Number equal to Physical Page Number. 
+
 ## License
 
 Code is licensed under GNU General Public License 2.0
