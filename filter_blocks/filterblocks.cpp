@@ -31,18 +31,20 @@ FilterBlocks::Options FilterBlocks::parseArgs(int argc, char *argv[])
 {
     Options options;
     options.blockSize = 0;
+    options.invertCondition = false;
 
     struct option longOptions[] = {
        { "output", required_argument, 0, 'o'},
        { "log", required_argument, 0, 'l'},
        { "size", required_argument, 0, 's'},
        { "condition", required_argument, 0, 'c'},
+       { "invert", no_argument, 0, 'i'},
        { 0, 0, 0, 0}
     };
 
     for (;;)  {
         int optionIndex = 0;
-        int c = getopt_long(argc, argv, "o:l:s:c:", longOptions, &optionIndex);
+        int c = getopt_long(argc, argv, "o:l:s:c:i", longOptions, &optionIndex);
         if (c == -1)
             break;
 
@@ -59,6 +61,9 @@ FilterBlocks::Options FilterBlocks::parseArgs(int argc, char *argv[])
             break;
         case 'c':
             options.conditions.push_back(std::move(Condition(optarg)));
+            break;
+        case 'i':
+            options.invertCondition = true;
             break;
         }
     }
@@ -98,9 +103,10 @@ void FilterBlocks::filterblocksContents()
         auto bytesRead = inputStream.read(bufferPtr, blockSize).gcount();
         if (bytesRead == 0)
             break;
-        if(std::all_of(options.conditions.cbegin(),
+        if (std::all_of(options.conditions.cbegin(),
                        options.conditions.cend(),
-                       [bufferPtr, blockSize](const Condition& c){ return c.matches(bufferPtr, blockSize); }))
+                       [bufferPtr, blockSize](const Condition& c){ return c.matches(bufferPtr, blockSize); }) !=
+            options.invertCondition)
             outputStream.write(bufferPtr, bytesRead);
     }
 }

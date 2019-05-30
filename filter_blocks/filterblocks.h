@@ -22,6 +22,7 @@ private:
         std::string inputFile;
         std::size_t blockSize;
         std::vector<Condition> conditions;
+        bool invertCondition;
     };
 
     Options parseArgs(int argc, char *argv[]);
