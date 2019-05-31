@@ -38,6 +38,9 @@ Rotation operation restores logical ordering in erase block by moving pages with
 to the beginning of the block, by the amount of pages in Logical Page Number, modulo page count per
 erase block. Afterwards pages are arranged with Logical Page Number equal to Physical Page Number. 
 
+* arrange\_blocks: Sorts the output blocks according to logical block number. After this operation,
+physical position of in image block number aligns with blocks Logical Block Number.
+
 ## License
 
 Code is licensed under GNU General Public License 2.0
