@@ -2,8 +2,10 @@
 
 #include <cstring>
 #include <getopt.h>
-#include <memory>
+#include <vector>
 #include <unistd.h>
+#include <algorithm>
+#include <iterator>
 
 int main(int argc, char *argv[]) {
     return invert::Invert(argc, argv).run();
@@ -74,10 +76,8 @@ int Invert::run()
 
 void Invert::invertContents()
 {
-    using Word = unsigned long long int;
-    auto buffer = std::make_unique<char[]>(DEFAULT_BLOCK_SIZE);
-    auto bufferPtr = buffer.get();
-    auto bufferPtrWord = reinterpret_cast<Word*>(bufferPtr);
+    auto buffer = std::vector<char>(DEFAULT_BLOCK_SIZE);
+    auto bufferPtr = buffer.data();
     ByteOffset offset = 0;
 
     while (!inputStream.eof()) {
@@ -85,10 +85,14 @@ void Invert::invertContents()
         if (bytesRead == 0)
             break;
 
-        for(unsigned int index = 0; index < bytesRead / sizeof(Word); ++index)
-            bufferPtrWord[index] ^= ~0ULL;
+        std::transform(
+                begin(buffer),
+                end(buffer),
+                begin(buffer),
+                [](const auto b) { return ~b; });
 
-        outputStream.write(bufferPtr, bytesRead);
+        std::ostreambuf_iterator<char> writer{outputStream};
+        std::copy_n(begin(buffer), bytesRead, writer);
         offset += bytesRead;
     }
 }

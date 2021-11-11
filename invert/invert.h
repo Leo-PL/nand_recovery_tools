@@ -13,7 +13,7 @@ public:
     int run();
 
 private:
-    using ByteOffset = unsigned long long int;
+    using ByteOffset = std::size_t;
     struct Options {
         std::string outputFile;
         std::string logFile;
