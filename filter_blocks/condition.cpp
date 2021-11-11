@@ -17,14 +17,14 @@ Condition::Condition(const std::string &str)
         throw std::runtime_error("Error parsing condition: " + str);
 }
 
-bool Condition::matches(char* const buffer, size_t size) const
+bool Condition::matches(const std::vector<char>& buffer) const
 {
-    if(offset < size)
+    if(offset < buffer.size())
         return (buffer[offset] & mask) == (value & mask);
     else
         throw std::runtime_error("Condition offset outside buffer size: " +
                                  std::to_string(offset) + " vs " +
-                                 std::to_string(size) + " bytes");
+                                 std::to_string(buffer.size()) + " bytes");
 }
 
 }

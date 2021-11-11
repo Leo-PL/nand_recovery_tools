@@ -23,9 +23,7 @@ FilterBlocks::FilterBlocks(int argc, char *argv[]):
 {
 }
 
-FilterBlocks::~FilterBlocks()
-{
-}
+FilterBlocks::~FilterBlocks() = default;
 
 FilterBlocks::Options FilterBlocks::parseArgs(int argc, char *argv[])
 {
@@ -96,18 +94,17 @@ void FilterBlocks::validateOptions()
 void FilterBlocks::filterblocksContents()
 {
     const auto blockSize = options.blockSize;
-    auto buffer = std::make_unique<char[]>(blockSize);
-    auto bufferPtr = buffer.get();
+    auto buffer = std::vector<char>(blockSize);
 
     while (!inputStream.eof()) {
-        auto bytesRead = inputStream.read(bufferPtr, blockSize).gcount();
+        auto bytesRead = inputStream.read(buffer.data(), blockSize).gcount();
         if (bytesRead == 0)
             break;
         if (std::all_of(options.conditions.cbegin(),
                        options.conditions.cend(),
-                       [bufferPtr, blockSize](const Condition& c){ return c.matches(bufferPtr, blockSize); }) !=
+                       [buffer, blockSize](const Condition& c){ return c.matches(buffer); }) !=
             options.invertCondition)
-            outputStream.write(bufferPtr, bytesRead);
+            outputStream.write(buffer.data(), bytesRead);
     }
 }
 
