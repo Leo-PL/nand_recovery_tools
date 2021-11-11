@@ -76,25 +76,14 @@ int Invert::run()
 
 void Invert::invertContents()
 {
-    auto buffer = std::vector<char>(DEFAULT_BLOCK_SIZE);
-    auto bufferPtr = buffer.data();
-    ByteOffset offset = 0;
-
-    while (!inputStream.eof()) {
-        auto bytesRead = inputStream.read(bufferPtr, DEFAULT_BLOCK_SIZE).gcount();
-        if (bytesRead == 0)
-            break;
-
-        std::transform(
-                begin(buffer),
-                end(buffer),
-                begin(buffer),
-                [](const auto b) { return ~b; });
-
-        std::ostreambuf_iterator<char> writer{outputStream};
-        std::copy_n(begin(buffer), bytesRead, writer);
-        offset += bytesRead;
-    }
+    std::istreambuf_iterator<char>readerStart{inputStream};
+    std::istreambuf_iterator<char>readerEnd{};
+    std::ostreambuf_iterator<char>writer{outputStream};
+    std::transform(
+        readerStart,
+        readerEnd,
+        writer,
+        [](const auto b) { return ~b; });
 }
 
 void Invert::log(const std::string& message)

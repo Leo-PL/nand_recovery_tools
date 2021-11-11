@@ -1,4 +1,4 @@
-CXXFLAGS += -O2 -Werror -Wall -Wextra -Wpedantic
+CXXFLAGS += -O2 -Werror -Wall -Wextra -Wpedantic -std=c++17
 
 all: invert
 invert: invert.o
