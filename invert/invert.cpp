@@ -63,7 +63,7 @@ int Invert::run()
 {
     try {
         invertContents();
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         log(e.what());
         return EXIT_FAILURE;
     }

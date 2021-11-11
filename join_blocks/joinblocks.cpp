@@ -102,7 +102,7 @@ int JoinBlocks::run()
         validateOptions();
         openInputFiles();
         joinInputBlocks();
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         log(e.what());
         return EXIT_FAILURE;
     }
