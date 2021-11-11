@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unistd.h>
+#include <vector>
 
 namespace filterblocks {
 
@@ -12,7 +13,8 @@ public:
     using Byte = unsigned char;
     Condition(size_t offset, Byte mask, Byte value);
     explicit Condition(const std::string& str);
-    bool matches(char* const buffer, size_t size) const;
+    //or std::span<char> in C++20
+    bool matches(const std::vector<char>& buffer) const;
 
 private:
     size_t offset;
