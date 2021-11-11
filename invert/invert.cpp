@@ -2,8 +2,10 @@
 
 #include <cstring>
 #include <getopt.h>
-#include <memory>
+#include <vector>
 #include <unistd.h>
+#include <algorithm>
+#include <iterator>
 
 int main(int argc, char *argv[]) {
     return invert::Invert(argc, argv).run();
@@ -74,23 +76,14 @@ int Invert::run()
 
 void Invert::invertContents()
 {
-    using Word = unsigned long long int;
-    auto buffer = std::make_unique<char[]>(DEFAULT_BLOCK_SIZE);
-    auto bufferPtr = buffer.get();
-    auto bufferPtrWord = reinterpret_cast<Word*>(bufferPtr);
-    ByteOffset offset = 0;
-
-    while (!inputStream.eof()) {
-        auto bytesRead = inputStream.read(bufferPtr, DEFAULT_BLOCK_SIZE).gcount();
-        if (bytesRead == 0)
-            break;
-
-        for(unsigned int index = 0; index < bytesRead / sizeof(Word); ++index)
-            bufferPtrWord[index] ^= ~0ULL;
-
-        outputStream.write(bufferPtr, bytesRead);
-        offset += bytesRead;
-    }
+    std::istreambuf_iterator<char>readerStart{inputStream};
+    std::istreambuf_iterator<char>readerEnd{};
+    std::ostreambuf_iterator<char>writer{outputStream};
+    std::transform(
+        readerStart,
+        readerEnd,
+        writer,
+        [](const auto b) { return ~b; });
 }
 
 void Invert::log(const std::string& message)
