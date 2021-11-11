@@ -2,7 +2,7 @@
 
 #include <cstring>
 #include <getopt.h>
-#include <memory>
+#include <vector>
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {
@@ -97,8 +97,8 @@ void Arrangeblocks::assembleBlocks()
 {
 
     const auto blockSize = options.blockSize;
-    auto buffer = std::make_unique<char[]>(blockSize);
-    auto bufferPtr = buffer.get();
+    auto buffer = std::vector<char>(blockSize);
+    auto bufferPtr = buffer.data();
 
     while (!inputStream.eof()) {
         size_t bytesRead = inputStream.read(bufferPtr, blockSize).gcount();
